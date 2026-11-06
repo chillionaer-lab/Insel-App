@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
   private WebView web;
   private ValueCallback<Uri[]> upload;
   private static final int PICK=7041;
-  private static final String SERVER="https://chillioneer.pythonanywhere.com";
+  private static final String SERVER="https://chillioneer.pythonanywhere.com/comfy/";
   @Override public void onCreate(Bundle b) {
     super.onCreate(b);
     getWindow().setStatusBarColor(Color.rgb(12,16,26));
