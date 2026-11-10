@@ -14,11 +14,24 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 public class MainActivity extends Activity {
   private WebView web;
   private ValueCallback<Uri[]> upload;
   private static final int PICK=7041;
   private static final String SERVER="https://chillioneer.pythonanywhere.com/comfy/";
+  private void injectVideoUploadFix(WebView view) {
+    try (InputStream in=getAssets().open("upscale_fix.js");
+         ByteArrayOutputStream out=new ByteArrayOutputStream()) {
+      byte[] data=new byte[8192];
+      int n;
+      while ((n=in.read(data))!=-1) out.write(data,0,n);
+      view.evaluateJavascript(out.toString("UTF-8"),null);
+    } catch(Exception e) {
+      android.util.Log.e("ComfyRemoteH3","Upscaler-Upload-Fix konnte nicht geladen werden",e);
+    }
+  }
   @Override public void onCreate(Bundle b) {
     super.onCreate(b);
     getWindow().setStatusBarColor(Color.rgb(12,16,26));
@@ -44,6 +57,10 @@ public class MainActivity extends Activity {
     settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
     CookieManager.getInstance().setAcceptCookie(true);
     web.setWebViewClient(new WebViewClient() {
+      @Override public void onPageFinished(WebView view,String url) {
+        super.onPageFinished(view,url);
+        if(url!=null && url.startsWith(SERVER)) injectVideoUploadFix(view);
+      }
       @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest req) {
         Uri u=req.getUrl();
         if ("https".equalsIgnoreCase(u.getScheme()) && "chillioneer.pythonanywhere.com".equalsIgnoreCase(u.getHost())) return false;
