@@ -36,6 +36,9 @@ public class MainActivity extends Activity {
     WebSettings settings=web.getSettings();
     settings.setJavaScriptEnabled(true);
     settings.setDomStorageEnabled(true);
+    // Always request the latest app HTML; preserve cookies and localStorage/token.
+    settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+    web.clearCache(true);
     settings.setAllowContentAccess(true);
     settings.setAllowFileAccess(false);
     settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
@@ -62,7 +65,7 @@ public class MainActivity extends Activity {
     });
     layout.addView(web,new LinearLayout.LayoutParams(-1,0,1));
     setContentView(layout);
-    web.loadUrl(SERVER);
+    web.loadUrl(SERVER + "?app_refresh=" + System.currentTimeMillis());
   }
   @Override protected void onActivityResult(int req,int result,Intent data) {
     super.onActivityResult(req,result,data);
