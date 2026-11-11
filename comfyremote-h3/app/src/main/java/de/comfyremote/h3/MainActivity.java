@@ -21,15 +21,21 @@ public class MainActivity extends Activity {
   private ValueCallback<Uri[]> upload;
   private static final int PICK=7041;
   private static final String SERVER="https://chillioneer.pythonanywhere.com/comfy/";
-  private void injectVideoUploadFix(WebView view) {
-    try (InputStream in=getAssets().open("upscale_fix.js");
-         ByteArrayOutputStream out=new ByteArrayOutputStream()) {
-      byte[] data=new byte[8192];
-      int n;
-      while ((n=in.read(data))!=-1) out.write(data,0,n);
+  private void injectAppFixes(WebView view) {
+    try {
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      // Keep the proven V3 upscaler and add the independent H3 input fix.
+      for (String asset : new String[]{"upscale_fix.js", "h3_inputs_v39.js"}) {
+        try (InputStream in=getAssets().open(asset)) {
+          byte[] data=new byte[8192];
+          int n;
+          while ((n=in.read(data))!=-1) out.write(data,0,n);
+          out.write('\n');
+        }
+      }
       view.evaluateJavascript(out.toString("UTF-8"),null);
     } catch(Exception e) {
-      android.util.Log.e("ComfyRemoteH3","Upscaler-Upload-Fix konnte nicht geladen werden",e);
+      android.util.Log.e("ComfyRemoteH3","WebView-Formular-Fixes konnten nicht geladen werden",e);
     }
   }
   @Override public void onCreate(Bundle b) {
@@ -59,7 +65,7 @@ public class MainActivity extends Activity {
     web.setWebViewClient(new WebViewClient() {
       @Override public void onPageFinished(WebView view,String url) {
         super.onPageFinished(view,url);
-        if(url!=null && url.startsWith(SERVER)) injectVideoUploadFix(view);
+        if(url!=null && url.startsWith(SERVER)) injectAppFixes(view);
       }
       @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest req) {
         Uri u=req.getUrl();
