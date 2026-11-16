@@ -42,7 +42,7 @@
     if (needsLast) result.push({key:'last_image',type:'image',label:'Endbild auswählen',required:true,hint:'Ein zweites, separates Bild für den letzten Videoframe.'});
     result.push({key:'positive_prompt',type:'textarea',label:'Positiver Prompt / Handlung',required:true,hint:'Beschreibe die gewünschte Bewegung beziehungsweise Szene.'});
     result.push({key:'duration_seconds',type:'select',label:isLong?'Gesamtdauer':'Videodauer',default:isLong?10:5,
-      options:options(isLong?[10,15,20,25,30]:[5,10,15],function(n){return n+' Sekunden';})});
+      options:options(isLong?[10,15,20,25,30]:(/^fl2v_[3-6]frames$/.test(kind)?[5,10,15,20,25,30]:[5,10,15]),function(n){return n+' Sekunden';})});
     result.push({key:'h3_resolution',type:'select',label:'Auflösungsbudget',default:'768x448',options:options(CATALOG),
       hint:needsImage?'Das Bild wird automatisch proportional eingepasst (kein Zuschnitt).':'Die nächste unterstützte H3-Auflösung wird gewählt.'});
     result.push({key:'sampler_steps',type:'select',label:isLong?'Sampling-Schritte je Segment':'Sampling-Schritte',default:(/^fl2v_[3-6]frames$/.test(kind))?8:12,options:options(BASE_STEPS)});
