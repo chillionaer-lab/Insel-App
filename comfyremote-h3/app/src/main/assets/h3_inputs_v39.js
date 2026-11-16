@@ -37,7 +37,7 @@
     if (needsImage) result.push({key:'input_image',type:'image',label:'Startbild auswählen',required:true,hint:'Neues PNG-, JPG- oder WebP-Bild vom Gerät hochladen oder ein vorhandenes H3-Eingabebild wählen.'});
     if (/^fl2v_[3-6]frames$/.test(kind)) {
       const count = Number(kind.match(/[3-6]/)[0]) - 2;
-      for (let i = 1; i <= count; i++) result.push({key:'middle_image_'+i,type:'image',label:count === 1 ? 'MIDDLE – Zwischenbild' : 'MIDDLE '+i+' – Zwischenbild',required:true,hint:count === 1 ? 'Referenzbild fuer die Videomitte (50 %).' : 'Referenzbild fuer '+(i === 1 ? '33 %' : '67 %')+' der Videodauer.'});
+      for (let i = 1; i <= count; i++) result.push({key:'middle_image_'+i,type:'image',label:count === 1 ? 'MIDDLE – Zwischenbild' : 'MIDDLE '+i+' – Zwischenbild',required:true,hint:count === 1 ? 'Referenzbild fuer die Videomitte (50 %).' : 'Referenzbild fuer '+Math.round(100*i/(count+1))+' %'+' der Videodauer.'});
     }
     if (needsLast) result.push({key:'last_image',type:'image',label:'Endbild auswählen',required:true,hint:'Ein zweites, separates Bild für den letzten Videoframe.'});
     result.push({key:'positive_prompt',type:'textarea',label:'Positiver Prompt / Handlung',required:true,hint:'Beschreibe die gewünschte Bewegung beziehungsweise Szene.'});
