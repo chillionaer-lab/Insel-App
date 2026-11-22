@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Only intended for the user's private Wi-Fi. Agent should never be exposed to Internet. -->
+    <base-config cleartextTrafficPermitted="true"/>
+</network-security-config>
