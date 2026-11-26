@@ -50,6 +50,8 @@ public class MainActivity extends Activity {
         WebSettings s=webView.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
+        // Always fetch the current server form (including standard I2V/FL2V durations).
+        s.setCacheMode(WebSettings.LOAD_NO_CACHE);
         s.setAllowFileAccess(false);
         s.setAllowContentAccess(true); // URI from Android's system document picker
         s.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
@@ -85,7 +87,8 @@ public class MainActivity extends Activity {
         });
         root.addView(webView,new LinearLayout.LayoutParams(-1,0,1));
         setContentView(root);
-        webView.loadUrl(serverUrl);
+        // Versioned navigation avoids stale cached HTML after a server update.
+        webView.loadUrl(serverUrl + "?app_version=202");
     }
 
     @Override protected void onActivityResult(int request,int result,Intent data){
